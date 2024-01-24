@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'stories.apps.StoriesConfig',
+    'users.apps.UsersConfig',
 ]
 
 MIDDLEWARE = [
@@ -127,3 +128,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # adds this URL to the URL of media files
 MEDIA_URL = '/media/'
+
+# registration of the new model User
+AUTH_USER_MODEL = 'users.User'
+# root to the default avatar
+DEFAULT_USER_IMAGE = MEDIA_URL + 'users/default.png'
