@@ -22,7 +22,7 @@ class StoriesAdmin(admin.ModelAdmin):
 
     fields = ['title', 'author', 'slug', 'content', 'photo', 'post_photo', 'cat', 'tags']
     readonly_fields = ['post_photo']
-    filter_horizontal = ['tags', 'cat']
+    filter_horizontal = ['tags',]
 
     @admin.action(description="Опубликовать выбранные записи")
     def set_published(self, request, QS: QuerySet):
