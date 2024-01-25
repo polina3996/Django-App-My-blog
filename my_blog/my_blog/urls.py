@@ -16,13 +16,21 @@ Including another URLconf
 """
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
+from django.views.defaults import page_not_found
 
 from . import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', include('stories.urls')),
+
+#     path('users/', include('users.urls', namespace="users")),
+#     path("__debug__/", include("debug_toolbar.urls")),
 ]
+
+# tells Django to take OUR view 'page_not_found' for non-existent pages
+handler404 = page_not_found
 
 # when DEBUG is True, we have one more URL (to downloaded files) for test server to take these
 # files on MEDIA_URL and view on HTML page
