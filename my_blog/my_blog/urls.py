@@ -29,7 +29,7 @@ urlpatterns = [
 #     path("__debug__/", include("debug_toolbar.urls")),
 ]
 
-# tells Django to take OUR view 'page_not_found' for non-existent pages
+# when DEBUG is False(production): tells Django to take OUR view 'page_not_found' for non-existent pages
 handler404 = page_not_found
 
 # when DEBUG is True, we have one more URL (to downloaded files) for test server to take these
