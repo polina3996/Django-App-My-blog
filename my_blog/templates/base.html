@@ -1,10 +1,17 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <link type="text/css" rel="stylesheet" href="{% static 'css/base.css' %}"/>
+    <title>{{title}}</title>
+    {% block css_additional %} {% endblock %}
 </head>
 <body>
-
+{% block mainmenu %} Меню {% endblock %}
+<!-- Sidebar слева --><!-- Конец Sidebar'а -->
+{% block content %} Базовая страница{% endblock %}
+{% block navigation %} Навигация {% endblock %}
 </body>
 </html>
