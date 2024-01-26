@@ -1,17 +1,62 @@
 {% load static %}
+{% load stories_tags %}
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link type="text/css" rel="stylesheet" href="{% static 'css/base.css' %}"/>
+    <link type="text/css" rel="stylesheet" href="{% static 'css/styles.css' %}"/>
     <title>{{title}}</title>
-    {% block css_additional %} {% endblock %}
 </head>
 <body>
-{% block mainmenu %} Меню {% endblock %}
-<!-- Sidebar слева --><!-- Конец Sidebar'а -->
-{% block content %} Базовая страница{% endblock %}
-{% block navigation %} Навигация {% endblock %}
+
+<table class="table-page" border=0 cellpadding="0" cellspacing="0">
+<tr><td valign=top>
+{% block mainmenu %}
+    <div class="header">
+		<ul class="mainmenu">
+			<li class="logo"><a href="{% url 'index' %}">
+				<div class="logo"></div></a>
+			</li>
+
+		{% menu as menu %}
+			{% for m in menu %}
+				<li><a href="{% url m.url_name %}">{{m.title}}</a></li>
+			{% endfor %}
+		</ul>
+		<div class="clear"></div>
+	</div>
+{% endblock mainmenu %}
+
+
+	<table class="table-content" border=0 cellpadding="0" cellspacing="0">
+	<tr>
+
+
+
+		<td valign="top" class="content">
+
+		<div class="content-text">
+		{% block content %} {% endblock %}
+		</div>
+
+
+{% block navigation %} {% endblock %}
+
+		</td>
+	</tr>
+	</table>
+</td>
+</tr>
+	<tr>
+		<td valign=top>
+		<div id="footer">
+			<p>&copy; 2024 Частичное или полное копирование информации с данного сайта для распространения на других ресурсах, в том числе и бумажных, строго запрещено.</p>
+		</div>
+		</td>
+	</tr>
+</table>
+
+
 </body>
 </html>

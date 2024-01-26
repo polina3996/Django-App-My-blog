@@ -3,6 +3,11 @@ from django.shortcuts import render, get_object_or_404
 
 from .models import Stories
 
+menu = [
+    {'title': "О сайте", 'url_name': 'about'},
+    {'title': "Написать историю", 'url_name': 'add_story'},
+]
+
 
 # Create your views here.
 def about(request):

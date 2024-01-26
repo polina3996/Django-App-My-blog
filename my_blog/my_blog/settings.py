@@ -117,7 +117,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
+# standard root(in development)
 STATIC_URL = 'static/'
+# root to the base directory of static files(in production)
+STATICFILES_DIRS = [BASE_DIR / 'static',]
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -125,7 +129,7 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # stores all downloaded files
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media') #?MEDIA_ROOT = BASE_DIR / 'media'
 # adds this URL to the URL of media files
 MEDIA_URL = '/media/'
 
