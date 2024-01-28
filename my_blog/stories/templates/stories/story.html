@@ -1,6 +1,15 @@
 {% extends 'base.html' %}
 
-
+{% with story.tags.all as T %}
+    {% if T %}
+        <ul class="tags-list">
+            <li>Теги: </li>
+            {% for t in T %}
+                <li><a href="{{t.get_absolute_url}}">{{t.name}}</a></li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endwith %}
 
 {% block content %} Форма редактирования и удаления истории {% endblock %}
 
