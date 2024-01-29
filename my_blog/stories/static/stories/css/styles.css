@@ -80,11 +80,6 @@ ul.list-articles li {
 	height: 60px;
 }
 
-.logo {
-	background: url('my_blog/stories/static/stories/images/logo.jpg') no-repeat 10px 5px;
-	width: 70px;
-	height: 60px;
-}
 
 ul.mainmenu {
 	list-style: none;
@@ -99,7 +94,7 @@ ul.mainmenu li {
 	float: left;
 	margin: 18px 40px 0 30px;
 }
-ul.mainmenu li.logo {margin: 0;}
+
 ul.mainmenu li.last {float: right;}
 
 ul.mainmenu li a {

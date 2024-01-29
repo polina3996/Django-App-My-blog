@@ -4,6 +4,7 @@ from django.shortcuts import render, get_object_or_404
 from .models import Stories, Tag, Category
 
 menu = [
+    {'title': "На главную", 'url_name': 'index'},
     {'title': "О сайте", 'url_name': 'about'},
     {'title': "Написать историю", 'url_name': 'add_story'},
 ]
@@ -41,10 +42,10 @@ def tag(request, tag_slug):
 
 def category(request, cat_id):
     """A view that displays all published stories connected to this category"""
-    category = get_object_or_404(Category, id=cat_id)
-    stories = category.stories.published.all()
+    cat = get_object_or_404(Category, id=cat_id)
+    stories = cat.stories.published.all()
     return render(request, 'stories/index.html', context={'stories': stories,
-                                                          'title': 'Категория: ' + category.name,
+                                                          'title': 'Категория: ' + cat.name,
                                                           'cat_selected': cat_id})
 
 
