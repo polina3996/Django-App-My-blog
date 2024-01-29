@@ -2,7 +2,7 @@ from django.contrib import admin, messages
 from django.db.models import QuerySet
 from django.utils.safestring import mark_safe
 
-from .models import Stories, Category
+from .models import Stories, Category, Tag
 
 
 # Register your models here.
@@ -52,5 +52,15 @@ class CategoryAdmin(admin.ModelAdmin):
     """Model Category in admin panel"""
     list_display = ('id', 'name')
     list_display_links = ('id', 'name')
+    ordering = ['id']
+    prepopulated_fields = {"slug": ("name",)}
 
+
+@admin.register(Tag)
+class TagAdmin(admin.ModelAdmin):
+    """Model Tag in admin panel"""
+    list_display = ('id', 'name')
+    list_display_links = ('id', 'name')
+    ordering = ['id']
+    prepopulated_fields = {"slug": ("name",)}
 

@@ -2,6 +2,7 @@ from django.contrib.auth import get_user_model
 from django.core.validators import MinLengthValidator, MaxLengthValidator
 from django.db import models
 from django.urls import reverse
+from django.utils.text import slugify
 
 
 # Create your models here.
@@ -18,7 +19,7 @@ class Stories(models.Model):
         PUBLISHED = 1, 'Опубликовано'
 
     title = models.CharField(max_length=255, verbose_name="Заголовок")
-    slug = models.SlugField(max_length=255, unique=True, db_index=True, verbose_name="Slug", validators=[
+    slug = models.SlugField(max_length=255, unique=True, db_index=True, null=False, verbose_name="Slug", validators=[
         MinLengthValidator(5, message="Минимум 5 символов"),
         MaxLengthValidator(100, message="Максимум 100 символов"),
     ])
@@ -47,6 +48,10 @@ class Stories(models.Model):
     # instead of 'objects' attribute (stories = Stories.published.all())
     published = PublishedManager()
 
+    # def save(self, *args, **kwargs):
+    #     self.slug = slugify(self.title)
+    #     super(Stories, self).save(*args, **kwargs)
+
     # how the object of the Stories will be displayed
     def __str__(self):
         return self.title
@@ -68,7 +73,11 @@ class Stories(models.Model):
 class Category(models.Model):
     """Model with ManyToOne with Stories"""
     name = models.CharField(max_length=100, db_index=True, verbose_name="Категория")
-    slug = models.SlugField(max_length=255, unique=True, db_index=True)
+    slug = models.SlugField(max_length=255, unique=True, db_index=True, null=False)
+
+    # def save(self, *args, **kwargs):
+    #     self.slug = slugify(self.name)
+    #     super(Category, self).save(*args, **kwargs)
 
     class Meta:
         verbose_name = "Категория"
@@ -86,7 +95,15 @@ class Category(models.Model):
 class Tag(models.Model):
     """Model with ManyToMany to Stories"""
     name = models.CharField(max_length=100, db_index=True)
-    slug = models.SlugField(max_length=255, unique=True, db_index=True)
+    slug = models.SlugField(max_length=255, unique=True, db_index=True, null=False)
+
+    class Meta:
+        verbose_name = "Тег"
+        verbose_name_plural = "Теги"
+
+    # def save(self, *args, **kwargs):
+    #     self.slug = slugify(self.name)
+    #     super(Tag, self).save(*args, **kwargs)
 
     # how the object of the Tag will be displayed
     def __str__(self):
