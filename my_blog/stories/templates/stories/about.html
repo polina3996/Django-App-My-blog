@@ -1,5 +1,13 @@
 {% extends 'base.html' %}
+{% load static %}
 
+{% block content %}
+    <h1>{{title}}</h1>
+    Этот сайт создан для добавления историй из Вашей жизни.
+    Возможно, что-то заставило Вас посмеяться, что-то разочаровало, а что-то вдохновило?
+    Расскажите об этом другим!
 
-{% block content %} О сайте {% endblock %}
+    <img src="{% static 'stories/images/about.jpg' %}">
+
+{% endblock %}
 
