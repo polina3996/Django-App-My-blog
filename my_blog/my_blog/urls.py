@@ -24,9 +24,9 @@ from . import settings
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('stories.urls')),
+    path("__debug__/", include("debug_toolbar.urls")),
 
 #     path('users/', include('users.urls', namespace="users")),
-#     path("__debug__/", include("debug_toolbar.urls")),
 ]
 
 # when DEBUG is False(production): tells Django to take OUR view 'page_not_found' for non-existent pages
