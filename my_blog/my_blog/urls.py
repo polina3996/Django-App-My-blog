@@ -32,7 +32,12 @@ urlpatterns = [
 # when DEBUG is False(production): tells Django to take OUR view 'page_not_found' for non-existent pages
 handler404 = page_not_found
 
+admin.site.site_header = 'Админ-панель Django сайта'
+admin.site.index_title = 'Админ-панель сайта с рассказами'
+
+
 # when DEBUG is True, we have one more URL (to downloaded files) for test server to take these
 # files on MEDIA_URL and view on HTML page
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+

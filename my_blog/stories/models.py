@@ -40,7 +40,7 @@ class Stories(models.Model):
     tags = models.ManyToManyField('Tag', blank=True, related_name='tags', verbose_name="Теги")
 
     author = models.ForeignKey(get_user_model(), on_delete=models.SET_NULL, related_name='stories', null=True,
-                               default=None)
+                               verbose_name='Автор', default=None)
 
     # to still exist (stories = Stories.objects.all())
     objects = models.Manager()
@@ -73,7 +73,7 @@ class Stories(models.Model):
 class Category(models.Model):
     """Model with ManyToOne with Stories"""
     name = models.CharField(max_length=100, db_index=True, verbose_name="Категория")
-    slug = models.SlugField(max_length=255, unique=True, db_index=True, null=False)
+    slug = models.SlugField(max_length=255, unique=True, db_index=True, null=False, verbose_name="Slug")
 
     # def save(self, *args, **kwargs):
     #     self.slug = slugify(self.name)
@@ -94,8 +94,8 @@ class Category(models.Model):
 
 class Tag(models.Model):
     """Model with ManyToMany to Stories"""
-    name = models.CharField(max_length=100, db_index=True)
-    slug = models.SlugField(max_length=255, unique=True, db_index=True, null=False)
+    name = models.CharField(max_length=100, db_index=True, verbose_name="Тег")
+    slug = models.SlugField(max_length=255, unique=True, db_index=True, null=False, verbose_name="Slug")
 
     class Meta:
         verbose_name = "Тег"
