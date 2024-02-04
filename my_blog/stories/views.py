@@ -1,8 +1,12 @@
 from django.http import HttpResponseNotFound
 from django.shortcuts import render, get_object_or_404, redirect
+from django.urls import reverse_lazy
 
 from .forms import AddStory
 from .models import Stories, Tag, Category
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+
+from .utils import DataMixin
 
 menu = [
     {'title': "На главную", 'url_name': 'index'},
@@ -17,57 +21,120 @@ def about(request):
     return render(request, 'stories/about.html', context={'title': 'О сайте'})
 
 
-def addstory(request):
-    """A view that displays a form to add a story"""
-    if request.method == 'POST':
-        # a form is filled with inputted data, validation by browser
-        form = AddStory(request.POST, request.FILES)
-        # validation by server
-        if form.is_valid():
-            form.save()
-            # try:
-            #     # a story is added to database(fields of the form should have same with fields of the model names)
-            #     Stories.objects.create(**form.cleaned_data)
-            return redirect('index')
-            # except:
-            #     # a message to the user
-            #     form.add_error(None, 'Ошибка добавления истории')
-    else:
-        # GET -> empty form is shown
-         form = AddStory()
-    return render(request, 'stories/addstory.html', context={'title': 'Добавление истории',
-                                                             'form': form,
-                                                             })
+#     contact_list = Women.published.all()
+#     paginator = Paginator(contact_list, 3)
+#
+#     page_number = request.GET.get('page')
+#     page_obj = paginator.get_page(page_number)
+#
+#     return render(
+#                   {, 'page_obj': page_obj})
+
+class IndexView(DataMixin, ListView):
+    """A Class Based View that displays main page with all stories"""
+    template_name = 'stories/index.html'
+    context_object_name = 'stories'
+    title_page = 'Все истории'
+    cat_selected = 0
+
+    def get_queryset(self):
+        return Stories.published.all().select_related('cat')
 
 
-def index(request):
-    """A view that displays main page with all stories"""
-    return render(request, 'stories/index.html', context={'cat_selected':0,
-                                                          'title': 'Все истории'})
+class AddStoryView(DataMixin, CreateView):
+    """A Class Based View that displays a form to add a story"""
+    form_class = AddStory
+    template_name = 'stories/addstory.html'
+    title_page = 'Добавление истории'
+    # if we want to redirect not where 'get_absolute_url' of Stories(connected to this form) leads
+    success_url = reverse_lazy('index')
 
 
-def story(request, story_slug: str):
-    """A view that displays a certain story with the possibility to edit it"""
-    one_story = get_object_or_404(Stories, slug=story_slug)
-    return render(request, 'stories/story.html', context={'story': one_story,
-                                                          'title': f'История {one_story.title}'})
+# class AddPage(PermissionRequiredMixin, LoginRequiredMixin, DataMixin, CreateView):
+#     permission_required = 'women.add_women' # <приложение>.<действие>_<таблица>
+#     def form_valid(self, form):
+#         w = form.save(commit=False)
+#         w.author = self.request.user
+#         return super().form_valid(form)
 
 
-def tag(request, tag_slug):
+class EditStoryView(DataMixin, UpdateView):
+    """A Class Based View that displays some fields of the story to edit it"""
+    model = Stories
+    # fields from the form AddStory that we want to be edited
+    fields = ['title', 'content', 'photo', 'is_published', 'cat']
+    template_name = 'stories/addstory.html'
+    success_url = reverse_lazy('index')
+    title_page = 'Редактирование истории'
+    # permission_required = 'women.change_women'
+
+
+# class Edit_Story(PermissionRequiredMixin, DataMixin, UpdateView):
+
+
+class DeleteStoryView(DataMixin, DeleteView):
+    """A Class Based View that displays a new template where you can delete the story"""
+    model = Stories
+    success_url = reverse_lazy('index')
+    template_name = "stories/stories_confirm_delete.html"
+    # permission_required = 'women.change_women'
+
+
+# class Delete_Story(PermissionRequiredMixin, DataMixin, UpdateView):
+
+
+class StoryView(DataMixin, DetailView):
+    """A Class Based View that displays a certain story"""
+    template_name = 'stories/story.html'
+    slug_url_kwarg = 'story_slug'
+    context_object_name = 'story'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return self.get_mixin_context(context, title=context['story'].title)
+
+    def get_object(self, queryset=None):
+        return get_object_or_404(Stories.published, slug=self.kwargs[self.slug_url_kwarg])
+
+
+class TagView(DataMixin, ListView):
     """A view that displays all published stories connected to this tag"""
-    tag = get_object_or_404(Tag, slug=tag_slug)
-    stories = tag.tags.published.select_related('cat')  # all()
-    return render(request, 'stories/index.html', context={'stories': stories,
-                                                          'title': 'Тег: ' + tag.name})
+    template_name = 'stories/index.html'
+    context_object_name = 'stories'
+    # if there are no objects -> 404NotFound
+    allow_empty = False
+
+    def get_queryset(self):
+        # stories with corresponding category
+        return Stories.published.filter(tags__slug=self.kwargs['tag_slug']).select_related('cat')
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        # content of the template
+        context = super().get_context_data(**kwargs)
+        tag = Tag.objects.get(slug=self.kwargs['tag_slug'])
+        return self.get_mixin_context(context,
+                                      title='Тег: ' + tag.name)
 
 
-def category(request, cat_id):
+class CategoryView(DataMixin, ListView):
     """A view that displays all published stories connected to this category"""
-    cat = get_object_or_404(Category, id=cat_id)
-    stories = cat.stories.published.select_related('tags') # all()
-    return render(request, 'stories/index.html', context={'stories': stories,
-                                                          'title': 'Категория: ' + cat.name,
-                                                          'cat_selected': cat_id})
+    template_name = 'stories/index.html'
+    context_object_name = 'stories'
+    # if there are no objects -> 404NotFound
+    allow_empty = False
+
+    def get_queryset(self):
+        # stories with corresponding category
+        return Stories.published.filter(cat__slug=self.kwargs['cat_slug']).select_related("cat")
+
+    def get_context_data(self, **kwargs):
+        # content of the template
+        context = super().get_context_data(**kwargs)
+        cat = context['stories'][0].cat
+        return self.get_mixin_context(context,
+                                      title='Категория: ' + cat.name,
+                                      cat_selected=cat.pk,
+                                      )
 
 
 def page_not_found(request, exception):
