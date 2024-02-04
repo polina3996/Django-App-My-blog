@@ -1,6 +1,33 @@
 {% extends 'base.html' %}
 
+{% block content %}
+<h1>{{title}}</h1>
+<ul class="list-articles">
+	{% for s in stories %}
+        <li><div class="article-panel"><p class="first">
+            Категория: {{s.cat.name}} |
+            Автор: {{ s.author.username|default:"неизвестен" }}</p>
+			<p class="last">
+				Дата: {{s.time_update|date:"d-m-Y H:i:s"}}</p>
+    		</div>
+
+			{% if s.photo %}
+				<p><img class="img-article-left thumb" src="{{s.photo.url}}"></p>
+			{% endif %}
+
+			<h2>{{s.title}}</h2>
+
+    		{% autoescape off %}
+				{{s.content|linebreaks|truncatewords:40}}
+    		{% endautoescape %}
+
+			<div class="clear"></div>
+
+			<p class="link-read-post"><a href="{{ s.get_absolute_url }}">Читать историю</a></p>
+		</li>
+	{% endfor %}
+</ul>
+{% endblock %}
 
 
-{% block content %} Все истории {% endblock %}
 

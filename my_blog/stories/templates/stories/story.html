@@ -11,5 +11,13 @@
     {% endif %}
 {% endwith %}
 
-{% block content %} Форма редактирования и удаления истории {% endblock %}
+{% block content %}
+    <h1>{{title}}</h1>
+
+    {% if story.photo %}
+        <p><img class="img-article-left" src="{{story.photo.url}}"></p>
+    {% endif %}
+
+    {{story.content|linebreaks}}
+{% endblock %}
 

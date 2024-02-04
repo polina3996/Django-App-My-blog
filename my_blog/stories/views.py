@@ -50,7 +50,7 @@ def story(request, story_slug: str):
     """A view that displays a certain story with the possibility to edit it"""
     one_story = get_object_or_404(Stories, slug=story_slug)
     return render(request, 'stories/story.html', context={'story': one_story,
-                                                          'title': f'История {story_slug}'})
+                                                          'title': f'История {one_story.title}'})
 
 
 def tag(request, tag_slug):
