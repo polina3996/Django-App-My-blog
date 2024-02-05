@@ -21,15 +21,6 @@ def about(request):
     return render(request, 'stories/about.html', context={'title': 'О сайте'})
 
 
-#     contact_list = Women.published.all()
-#     paginator = Paginator(contact_list, 3)
-#
-#     page_number = request.GET.get('page')
-#     page_obj = paginator.get_page(page_number)
-#
-#     return render(
-#                   {, 'page_obj': page_obj})
-
 class IndexView(DataMixin, ListView):
     """A Class Based View that displays main page with all stories"""
     template_name = 'stories/index.html'

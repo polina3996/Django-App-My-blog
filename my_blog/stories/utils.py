@@ -1,7 +1,7 @@
 class DataMixin:
     """Common attributes for several Cass Based Views"""
-    # at the beginning there params are empty
-    #paginate_by = 5
+    paginate_by = 3
+    # at the beginning these params are empty
     title_page = None
     cat_selected = None
     extra_context = {}
