@@ -1,3 +1,5 @@
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseNotFound
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy
@@ -7,12 +9,6 @@ from .models import Stories, Tag, Category
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
 from .utils import DataMixin
-
-menu = [
-    {'title': "На главную", 'url_name': 'index'},
-    {'title': "О сайте", 'url_name': 'about'},
-    {'title': "Написать историю", 'url_name': 'add_story'},
-]
 
 
 # Create your views here.
@@ -32,7 +28,7 @@ class IndexView(DataMixin, ListView):
         return Stories.published.all().select_related('cat')
 
 
-class AddStoryView(DataMixin, CreateView):
+class AddStoryView(DataMixin, LoginRequiredMixin, CreateView):
     """A Class Based View that displays a form to add a story"""
     form_class = AddStory
     template_name = 'stories/addstory.html'
@@ -49,7 +45,7 @@ class AddStoryView(DataMixin, CreateView):
 #         return super().form_valid(form)
 
 
-class EditStoryView(DataMixin, UpdateView):
+class EditStoryView(DataMixin, LoginRequiredMixin, UpdateView):
     """A Class Based View that displays some fields of the story to edit it"""
     model = Stories
     # fields from the form AddStory that we want to be edited
@@ -63,7 +59,8 @@ class EditStoryView(DataMixin, UpdateView):
 # class Edit_Story(PermissionRequiredMixin, DataMixin, UpdateView):
 
 
-class DeleteStoryView(DataMixin, DeleteView):
+
+class DeleteStoryView(DataMixin, LoginRequiredMixin, DeleteView):
     """A Class Based View that displays a new template where you can delete the story"""
     model = Stories
     success_url = reverse_lazy('index')
@@ -74,7 +71,7 @@ class DeleteStoryView(DataMixin, DeleteView):
 # class Delete_Story(PermissionRequiredMixin, DataMixin, UpdateView):
 
 
-class StoryView(DataMixin, DetailView):
+class StoryView(DataMixin, LoginRequiredMixin, DetailView):
     """A Class Based View that displays a certain story"""
     template_name = 'stories/story.html'
     slug_url_kwarg = 'story_slug'
