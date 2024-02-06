@@ -1,3 +1,11 @@
+
+menu = [
+    {'title': "На главную", 'url_name': 'index'},
+    {'title': "О сайте", 'url_name': 'about'},
+    {'title': "Написать историю", 'url_name': 'add_story'},
+]
+
+
 class DataMixin:
     """Common attributes for several Cass Based Views"""
     paginate_by = 3

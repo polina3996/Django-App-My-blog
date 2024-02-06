@@ -8,12 +8,6 @@ from ..models import Tag, Category
 register = template.Library()
 
 
-@register.simple_tag(name='menu')
-def get_menu():
-    """A simple user's tag to get menu of the app"""
-    return views.menu
-
-
 @register.inclusion_tag('stories/tags.html')
 def show_tags():
     """An inclusion user's tag to get a list of tags, connected to any stories"""
