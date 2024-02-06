@@ -2,9 +2,10 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.views import LoginView
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
+from django.views.generic import CreateView
 
-from .forms import LoginUserForm
+from .forms import LoginUserForm, RegisterUserForm
 
 
 # Create your views here.
@@ -14,7 +15,6 @@ class LoginUser(LoginView):
     form_class = LoginUserForm
     template_name = 'users/login.html'
     extra_context = {'title': 'Авторизация'}
-
 
     # if request.method == 'POST':
     #     # sending the filled form
@@ -40,3 +40,28 @@ def logout_user(request):
     # logging out and redirection to log in
     logout(request)
     return HttpResponseRedirect(reverse('users:login'))
+
+
+class RegisterUser(CreateView):
+    """"A class based view to register"""
+    form_class = RegisterUserForm
+    template_name = 'users/register.html'
+    extra_context = {'title': 'Регистрация'}
+    success_url = reverse_lazy('users:login')
+
+# def register(request):
+#     if request.method == 'POST':
+#         # sending the filled form
+#         form = RegisterUserForm(request.POST)
+#         if form.is_valid():
+#             # create a new user without adding him to database
+#             user = form.save(commit=False)
+#             # encrypting inputted password
+#             user.set_password(form.cleaned_data['password'])
+#             # user is saved to database
+#             user.save()
+#             return render(request, 'users/register_done.html')
+#     else:
+#         # GET-request -> empty form
+#         form = RegisterUserForm()
+#     return render(request, 'users/register.html', {'form': form})
