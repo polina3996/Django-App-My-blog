@@ -1,11 +1,13 @@
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login, logout, get_user_model
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse, reverse_lazy
-from django.views.generic import CreateView
+from django.views.generic import CreateView, UpdateView
 
-from .forms import LoginUserForm, RegisterUserForm
+from .forms import LoginUserForm, RegisterUserForm, ProfileUserForm
+from ..my_blog import settings
 
 
 # Create your views here.
@@ -49,6 +51,7 @@ class RegisterUser(CreateView):
     extra_context = {'title': 'Регистрация'}
     success_url = reverse_lazy('users:login')
 
+
 # def register(request):
 #     if request.method == 'POST':
 #         # sending the filled form
@@ -65,3 +68,19 @@ class RegisterUser(CreateView):
 #         # GET-request -> empty form
 #         form = RegisterUserForm()
 #     return render(request, 'users/register.html', {'form': form})
+
+class ProfileUser(LoginRequiredMixin, UpdateView):
+    """"A class based view to show and update user's profile"""
+    model = get_user_model()
+    form_class = ProfileUserForm
+    template_name = 'users/profile.html'
+    extra_context = {'title': 'Профиль пользователя',
+                     'default_image': settings.DEFAULT_USER_IMAGE}
+
+    def get_success_url(self):
+        # after changing and saving an updated profile
+        return reverse_lazy('users:profile')
+
+    def get_object(self, queryset=None):
+        # getting a profile to update - only CURRENT profile
+        return self.request.user
