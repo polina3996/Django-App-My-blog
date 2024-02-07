@@ -137,8 +137,10 @@ AUTH_USER_MODEL = 'users.User'
 # root to the default avatar
 DEFAULT_USER_IMAGE = MEDIA_URL + 'users/default.png'
 
+# additional log in using not only username, but also email
 AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend',
                            'users.authentication.EmailAuthBackend']
+
 # after successful authorization
 LOGIN_REDIRECT_URL = 'index'
 # for non-authorized users
