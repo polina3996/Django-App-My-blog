@@ -147,3 +147,6 @@ LOGIN_REDIRECT_URL = 'index'
 LOGIN_URL = 'users:login'
 # after logging out
 LOGOUT_REDIRECT_URL = 'index'
+
+# while changing password: a letter with the link is sent to console instead of mailbox
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
