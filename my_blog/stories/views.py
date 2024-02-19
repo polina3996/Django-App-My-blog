@@ -1,5 +1,5 @@
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.http import HttpResponseNotFound
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy
@@ -28,24 +28,22 @@ class IndexView(DataMixin, ListView):
         return Stories.published.all().select_related('cat')
 
 
-class AddStoryView(DataMixin, LoginRequiredMixin, CreateView):
+class AddStoryView(PermissionRequiredMixin, DataMixin, LoginRequiredMixin, CreateView):
     """A Class Based View that displays a form to add a story"""
     form_class = AddStory
     template_name = 'stories/addstory.html'
     title_page = 'Добавление истории'
     # if we want to redirect not where 'get_absolute_url' of Stories(connected to this form) leads
     success_url = reverse_lazy('index')
+    permission_required = 'stories.add_stories'  # <приложение>.<действие>_<таблица>
+
+    def form_valid(self, form):
+        w = form.save(commit=False)
+        w.author = self.request.user
+        return super().form_valid(form)
 
 
-# class AddPage(PermissionRequiredMixin, LoginRequiredMixin, DataMixin, CreateView):
-#     permission_required = 'women.add_women' # <приложение>.<действие>_<таблица>
-#     def form_valid(self, form):
-#         w = form.save(commit=False)
-#         w.author = self.request.user
-#         return super().form_valid(form)
-
-
-class EditStoryView(DataMixin, LoginRequiredMixin, UpdateView):
+class EditStoryView(PermissionRequiredMixin, DataMixin, LoginRequiredMixin, UpdateView):
     """A Class Based View that displays some fields of the story to edit it"""
     model = Stories
     # fields from the form AddStory that we want to be edited
@@ -53,22 +51,15 @@ class EditStoryView(DataMixin, LoginRequiredMixin, UpdateView):
     template_name = 'stories/addstory.html'
     success_url = reverse_lazy('index')
     title_page = 'Редактирование истории'
-    # permission_required = 'women.change_women'
+    permission_required = 'stories.change_stories'
 
 
-# class Edit_Story(PermissionRequiredMixin, DataMixin, UpdateView):
-
-
-
-class DeleteStoryView(DataMixin, LoginRequiredMixin, DeleteView):
+class DeleteStoryView(PermissionRequiredMixin, DataMixin, LoginRequiredMixin, DeleteView):
     """A Class Based View that displays a new template where you can delete the story"""
     model = Stories
     success_url = reverse_lazy('index')
     template_name = "stories/stories_confirm_delete.html"
-    # permission_required = 'women.change_women'
-
-
-# class Delete_Story(PermissionRequiredMixin, DataMixin, UpdateView):
+    permission_required = 'stories.delete_stories'
 
 
 class StoryView(DataMixin, LoginRequiredMixin, DetailView):

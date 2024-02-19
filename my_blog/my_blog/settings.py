@@ -141,11 +141,11 @@ DEFAULT_USER_IMAGE = MEDIA_URL + 'users/default.png'
 AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend',
                            'users.authentication.EmailAuthBackend']
 
-# after successful authorization
+# after successful authorization(if there is no hidden field 'next' in Template 'Login')
 LOGIN_REDIRECT_URL = 'index'
 # for non-authorized users
 LOGIN_URL = 'users:login'
-# after logging out
+# after logging out(if there is no redirect in the view)
 LOGOUT_REDIRECT_URL = 'index'
 
 # while changing password: a letter with the link is sent to console instead of mailbox

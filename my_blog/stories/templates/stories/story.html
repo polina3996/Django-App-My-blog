@@ -1,5 +1,15 @@
 {% extends 'base.html' %}
 
+{% block breadcrumbs %}
+{% if story.author.id == user.id %}
+    {% if perms.stories.change_stories %}
+        <p><a href="{% url 'edit_story' story.slug %}">Редактировать</a></p>
+    {% endif %}
+    {% if perms.stories.delete_stories %}
+        <p><a href="{% url 'delete_story' story.slug %}">Удалить</a></p>
+    {% endif %}
+{% endif %}
+
 {% with story.tags.all as T %}
     {% if T %}
         <ul class="tags-list">
@@ -10,6 +20,7 @@
         </ul>
     {% endif %}
 {% endwith %}
+{% endblock %}
 
 {% block content %}
     <h1>{{title}}</h1>
