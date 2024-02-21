@@ -1,5 +1,6 @@
+{% extends 'base.html' %}
 {% block content %}
-<h1>Добро пожаловать!</h1>
+<h1>{{title}}</h1>
 
-<p>Вы успешно зарегистрировались. Войдите по <a href="{% url 'users:login %}">ссылке</a>.</p>
+<p>Вы успешно зарегистрировались. Войдите по <a href="{% url 'users:login' %}">ссылке</a>.</p>
 {% endblock%}

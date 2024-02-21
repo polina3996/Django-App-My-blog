@@ -10,10 +10,4 @@ urlpatterns = [
     path('story/<slug:story_slug>/', views.StoryView.as_view(), name='story'),
     path('category/<slug:cat_slug>/', views.CategoryView.as_view(), name='category'),
     path('tag/<slug:tag_slug>/', views.TagView.as_view(), name='tag'),
-
 ]
-
-#     path('login/', views.login, name='login'),
-#
-#
-#     ,

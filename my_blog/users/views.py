@@ -17,24 +17,6 @@ class LoginUser(LoginView):
     template_name = 'users/login.html'
     extra_context = {'title': 'Авторизация'}
 
-    # if request.method == 'POST':
-    #     # sending the filled form
-    #     form = LoginUserForm(request.POST)
-    #     if form.is_valid():
-    #         # authentication - search in the database
-    #         user = authenticate(request,
-    #                             username=form.cleaned_data['username'],
-    #                             password=form.cleaned_data['password'])
-    #         if user and user.is_active:
-    #             # user exists and is not banned -> authorization
-    #             login(request, user)
-    #             # redirection to his profile + writing him down into session
-    #             return HttpResponseRedirect(reverse('users:profile'))
-    # else:
-    #     # GET-request -> empty form
-    #     form = LoginUserForm()
-    # return render(request, 'users/login.html', {'form': form})
-
 
 def logout_user(request):
     """A view to log out for authorized users"""
@@ -48,25 +30,13 @@ class RegisterUser(CreateView):
     form_class = RegisterUserForm
     template_name = 'users/register.html'
     extra_context = {'title': 'Регистрация'}
-    success_url = reverse_lazy('users:login')
+    success_url = reverse_lazy('users:register-done')
 
 
-# def register(request):
-#     if request.method == 'POST':
-#         # sending the filled form
-#         form = RegisterUserForm(request.POST)
-#         if form.is_valid():
-#             # create a new user without adding him to database
-#             user = form.save(commit=False)
-#             # encrypting inputted password
-#             user.set_password(form.cleaned_data['password'])
-#             # user is saved to database
-#             user.save()
-#             return render(request, 'users/register_done.html')
-#     else:
-#         # GET-request -> empty form
-#         form = RegisterUserForm()
-#     return render(request, 'users/register.html', {'form': form})
+def register_done(request):
+    """A view that displays register-done-page"""
+    return render(request, 'users/register_done.html', context={'title': 'Добро пожаловать!'})
+
 
 class ProfileUser(LoginRequiredMixin, UpdateView):
     """"A class based view to show and update user's profile"""
